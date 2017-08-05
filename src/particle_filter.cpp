@@ -180,9 +180,9 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 }
 
 void ParticleFilter::resample() {
-	// TODO: Resample particles with replacement with probability proportional to their weight. 
-	// NOTE: You may find std::discrete_distribution helpful here. (wheel algorithm course)
-	//   http://en.cppreference.com/w/cpp/numeric/random/discrete_distribution
+    // TODO: Resample particles with replacement with probability proportional to their weight. 
+    // NOTE: You may find std::discrete_distribution helpful here. (wheel algorithm course)
+    //   http://en.cppreference.com/w/cpp/numeric/random/discrete_distribution
     
     uniform_int_distribution<int> dist_distribution(0,num_particles-1);
     double beta  = 0.0;
@@ -199,7 +199,7 @@ void ParticleFilter::resample() {
 
     for(int i=0;i<num_particles;i++){
         beta = beta + uni_dist(gen) * 2.0;
-		while(weights[index]<beta){
+        while(weights[index]<beta){
             beta  = beta - weights[index];
             index = (index + 1) % num_particles;
         }
