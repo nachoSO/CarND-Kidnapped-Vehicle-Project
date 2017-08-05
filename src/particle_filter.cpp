@@ -77,10 +77,10 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 }
 
 void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::vector<LandmarkObs>& observations) {
-	// TODO: Find the predicted measurement that is closest to each observed measurement and assign the 
-	//   observed measurement to this particular landmark.
-	// NOTE: this method will NOT be called by the grading code. But you will probably find it useful to 
-	//   implement this method and use it as a helper during the updateWeights phase.
+    // TODO: Find the predicted measurement that is closest to each observed measurement and assign the 
+    //   observed measurement to this particular landmark.
+    // NOTE: this method will NOT be called by the grading code. But you will probably find it useful to 
+    //   implement this method and use it as a helper during the updateWeights phase.
     
     for(int i=0;i<observations.size();i++){
         double min_dist,dist;
@@ -153,7 +153,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
         //associate the landmarks to the particles
         dataAssociation(predicted_landmarks,transformed_observations);
 	
- 		particles[i].weight = 1.0;
+        particles[i].weight = 1.0;
 
         //compute the probability
 
@@ -171,9 +171,9 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
             }			
 
             double w = exp( -( pow(l_x-obs_x,2)/(2*pow(sigma_unc[0],2)) + pow(l_y-obs_y,2)/(2*pow(sigma_unc[1],2)) ) ) / ( 2*M_PI*sigma_unc[0]*sigma_unc[1] );
-        	
-			//update the weights
-        	particles[i].weight = particles[i].weight*w;
+
+            //update the weights
+            particles[i].weight = particles[i].weight*w;
         }
 
     }    
@@ -198,7 +198,6 @@ void ParticleFilter::resample() {
     vector<Particle> p;
 
     for(int i=0;i<num_particles;i++){
-
         beta = beta + uni_dist(gen) * 2.0;
 		while(weights[index]<beta){
             beta  = beta - weights[index];
