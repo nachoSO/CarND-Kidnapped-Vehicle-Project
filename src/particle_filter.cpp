@@ -62,17 +62,17 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
         	theta = particles[i].theta + yaw_rate*delta_t;	
         }   
 
-		//RANDOM GAUSSIAN NOISE
-		// NOTE: When adding noise you may find std::normal_distribution and std::default_random_engine useful.
-		//  http://en.cppreference.com/w/cpp/numeric/random/normal_distribution
-		//  http://www.cplusplus.com/reference/random/default_random_engine/
-		normal_distribution<double> dist_x(x, std_pos[0]);
-		normal_distribution<double> dist_y(y, std_pos[1]);
-		normal_distribution<double> dist_theta(theta, std_pos[2]);
+        //RANDOM GAUSSIAN NOISE
+        // NOTE: When adding noise you may find std::normal_distribution and std::default_random_engine useful.
+        //  http://en.cppreference.com/w/cpp/numeric/random/normal_distribution
+        //  http://www.cplusplus.com/reference/random/default_random_engine/
+        normal_distribution<double> dist_x(x, std_pos[0]);
+        normal_distribution<double> dist_y(y, std_pos[1]);
+        normal_distribution<double> dist_theta(theta, std_pos[2]);
 
-		particles[i].x = dist_x(gen);
-		particles[i].y = dist_y(gen);
-		particles[i].theta = dist_theta(gen);
+        particles[i].x = dist_x(gen);
+        particles[i].y = dist_y(gen);
+        particles[i].theta = dist_theta(gen);
 	}
 }
 
@@ -118,16 +118,16 @@ LandmarkObs transformation(LandmarkObs observation, Particle p){
 
 void ParticleFilter::updateWeights(double sensor_range, double std_landmark[], 
 		std::vector<LandmarkObs> observations, Map map_landmarks) {
-	// TODO: Update the weights of each particle using a mult-variate Gaussian distribution. You can read
-	//   more about this distribution here: https://en.wikipedia.org/wiki/Multivariate_normal_distribution
-	// NOTE: The observations are given in the VEHICLE'S coordinate system. Your particles are located
-	//   according to the MAP'S coordinate system. You will need to transform between the two systems.
-	//   Keep in mind that this transformation requires both rotation AND translation (but no scaling).
-	//   The following is a good resource for the theory:
-	//   https://www.willamette.edu/~gorr/classes/GeneralGraphics/Transforms/transforms2d.htm
-	//   and the following is a good resource for the actual equation to implement (look at equation 
-	//   3.33
-	//   http://planning.cs.uiuc.edu/node99.html
+    // TODO: Update the weights of each particle using a mult-variate Gaussian distribution. You can read
+    //   more about this distribution here: https://en.wikipedia.org/wiki/Multivariate_normal_distribution
+    // NOTE: The observations are given in the VEHICLE'S coordinate system. Your particles are located
+    //   according to the MAP'S coordinate system. You will need to transform between the two systems.
+    //   Keep in mind that this transformation requires both rotation AND translation (but no scaling).
+    //   The following is a good resource for the theory:
+    //   https://www.willamette.edu/~gorr/classes/GeneralGraphics/Transforms/transforms2d.htm
+    //   and the following is a good resource for the actual equation to implement (look at equation 
+    //   3.33
+    //   http://planning.cs.uiuc.edu/node99.html
     
     //create a predicted_landmark vector
     for(int i=0;i<particles.size();i++){
@@ -140,7 +140,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
             diff_x = map_landmarks.landmark_list[j].x_f - particles[i].x;
             diff_y = map_landmarks.landmark_list[j].y_f - particles[i].y;
 
- 			if (fabs(diff_x) <= sensor_range && fabs(diff_y) <= sensor_range) 
+            if (fabs(diff_x) <= sensor_range && fabs(diff_y) <= sensor_range) 
                 predicted_landmarks.push_back(LandmarkObs{map_landmarks.landmark_list[j].id_i,map_landmarks.landmark_list[j].x_f,map_landmarks.landmark_list[j].y_f});
         }
     
@@ -162,13 +162,13 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
             obs_x = transformed_observations[k].x;
             obs_y = transformed_observations[k].y;
             
-			//get the associated landmark
-			for (unsigned int p = 0; p < predicted_landmarks.size(); p++) {
-				if (transformed_observations[k].id == predicted_landmarks[p].id) {
-					l_x = predicted_landmarks[p].x;
-					l_y = predicted_landmarks[p].y;
-				}
-			}			
+            //get the associated landmark
+            for (unsigned int p = 0; p < predicted_landmarks.size(); p++) {
+                if (transformed_observations[k].id == predicted_landmarks[p].id) {
+                    l_x = predicted_landmarks[p].x;
+                    l_y = predicted_landmarks[p].y;
+                }
+            }			
 
             double w = exp( -( pow(l_x-obs_x,2)/(2*pow(sigma_unc[0],2)) + pow(l_y-obs_y,2)/(2*pow(sigma_unc[1],2)) ) ) / ( 2*M_PI*sigma_unc[0]*sigma_unc[1] );
         	
